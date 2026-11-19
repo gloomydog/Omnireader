@@ -1,8 +1,7 @@
 # OmniReader
 
 A lightweight, fast reader for Linux that opens almost anything you read: e-books, PDFs, plain text, Markdown, HTML and source code.
-
-Built with [Tauri](https://tauri.app) (Rust) and [foliate-js](https://github.com/johnfactotum/foliate-js), the rendering engine behind [Foliate](https://johnfactotum.github.io/foliate/). The binary is about 7 MB and uses your system's WebKitGTK.
+Built with [Tauri](https://tauri.app) (Rust) and [foliate-js](https://github.com/johnfactotum/foliate-js), the rendering engine behind [Foliate](https://johnfactotum.github.io/foliate/). 
 
 
 ![outline](docs/reading.png)
@@ -83,7 +82,7 @@ sudo dnf install webkit2gtk4.1-devel openssl-devel librsvg2-devel
 # Arch
 sudo pacman -S webkit2gtk-4.1 base-devel librsvg
 
-git clone https://github.com/<you>/omnireader.git
+git clone https://github.com/gloomydog/Omnireader
 cd omnireader
 ./install.sh            
 ```
