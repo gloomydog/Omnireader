@@ -1,0 +1,38 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "omnireader",
+  "version": "0.1.0",
+  "identifier": "io.github.omnireader",
+  "build": {
+    "frontendDist": "../ui"
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": [
+      {
+        "title": "OmniReader",
+        "width": 1100,
+        "height": 780,
+        "minWidth": 420,
+        "minHeight": 360
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["deb", "appimage"],
+    "category": "Office",
+    "shortDescription": "Lightweight e-book and document reader",
+    "icon": ["icons/icon.png"],
+    "fileAssociations": [
+      { "ext": ["epub"], "mimeType": "application/epub+zip" },
+      { "ext": ["pdf"], "mimeType": "application/pdf" },
+      { "ext": ["mobi", "azw3", "azw"], "mimeType": "application/x-mobipocket-ebook" },
+      { "ext": ["fb2"], "mimeType": "application/x-fictionbook+xml" },
+      { "ext": ["cbz"], "mimeType": "application/vnd.comicbook+zip" }
+    ]
+  }
+}

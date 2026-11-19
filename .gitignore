@@ -1,0 +1,13 @@
+# build output
+src-tauri/target/
+src-tauri/gen/
+# prebuilt binary and release archives go to GitHub Releases, not the repo
+bin/
+*.tar.gz
+*.AppImage
+*.deb
+# editors / OS
+.vscode/
+.idea/
+*.swp
+.DS_Store

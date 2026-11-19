@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OmniReader</title>
+<link rel="stylesheet" href="app.css">
+<script type="module" src="app.js"></script>
+</head>
+<body data-theme="light">
+
+<!-- Library -->
+<main id="library">
+  <header class="lib-head">
+    <h1>OmniReader</h1>
+    <div class="lib-actions">
+      <div class="seg" data-key="lang">
+        <button data-v="ja">日本語</button>
+        <button data-v="en">English</button>
+      </div>
+      <button id="wordbook-btn" class="outline"><span data-i18n="wordbook"></span></button>
+      <button id="open-btn" class="primary"><span data-i18n="open"></span> <kbd>Ctrl+O</kbd></button>
+    </div>
+  </header>
+  <section id="recent" class="grid"></section>
+  <div id="empty" class="empty">
+    <p data-i18n="dropHint"></p>
+    <p class="sub" data-i18n="dropSub"></p>
+  </div>
+</main>
+
+<!-- Reader -->
+<div id="reader" hidden>
+  <header id="topbar" class="bar">
+    <button id="back-btn" data-i18n-title="library">
+      <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <button id="toc-btn" data-i18n-title="tocBtn">
+      <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg></button>
+    <div id="book-title" class="title"></div>
+    <button id="wordbook-btn2" data-i18n-title="wordbookBtn">
+      <svg viewBox="0 0 24 24"><path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3V4zM5 17a3 3 0 0 1 3-3h11M9 8h6"/></svg></button>
+    <button id="settings-btn" data-i18n-title="settingsBtn">
+      <svg viewBox="0 0 24 24"><path d="M3 19l5-14 5 14M5 14h6M15 19l3.5-9 3.5 9M16.2 16h3.6"/></svg></button>
+    <button id="fs-btn" data-i18n-title="fsBtn">
+      <svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg></button>
+  </header>
+
+  <div id="stage"></div>
+
+  <footer id="bottombar" class="bar">
+    <span id="loc-label" class="muted"></span>
+    <input id="progress" type="range" min="0" max="1" step="any" value="0">
+    <span id="loc-percent" class="muted"></span>
+    <div id="zoom-ctl">
+      <button id="zoom-out" data-i18n-title="zoomOut">−</button>
+      <button id="zoom-label" data-i18n-title="zoomReset"></button>
+      <button id="zoom-in" data-i18n-title="zoomIn">+</button>
+    </div>
+  </footer>
+
+  <aside id="toc-panel" class="panel left">
+    <div class="book-info">
+      <img id="cover" alt="">
+      <div><div id="info-title"></div><div id="info-author" class="muted"></div></div>
+    </div>
+    <div class="tabs">
+      <button data-tab="toc" class="on" data-i18n="tabToc"></button>
+      <button data-tab="notes"><span data-i18n="tabNotes"></span> <span id="notes-count" class="badge"></span></button>
+    </div>
+    <nav id="toc" class="tabpane"></nav>
+    <div id="notes" class="tabpane" hidden>
+      <div id="notes-list"></div>
+      <div id="notes-empty" class="muted" data-i18n="notesEmpty"></div>
+      <button id="export-btn" class="ghost" data-i18n="exportMd"></button>
+    </div>
+  </aside>
+
+  <aside id="settings-panel" class="panel popover">
+    <div class="row"><label data-i18n="theme"></label>
+      <div class="seg" data-key="theme">
+        <button data-v="light" class="sw sw-light" data-i18n="light"></button>
+        <button data-v="sepia" class="sw sw-sepia" data-i18n="sepia"></button>
+        <button data-v="dark" class="sw sw-dark" data-i18n="dark"></button>
+      </div></div>
+    <div class="reflow-only">
+      <div class="row"><label data-i18n="font"></label>
+        <div class="seg" data-key="font">
+          <button data-v="book" data-i18n="fontBook"></button>
+          <button data-v="serif" data-i18n="fontSerif"></button>
+          <button data-v="sans" data-i18n="fontSans"></button>
+        </div></div>
+      <div class="row"><label data-i18n="fontSize"></label>
+        <div class="step" data-key="fontSize" data-step="1" data-min="10" data-max="40"></div></div>
+      <div class="row"><label data-i18n="spacing"></label>
+        <div class="step" data-key="spacing" data-step="0.1" data-min="1" data-max="2.6"></div></div>
+      <div class="row"><label data-i18n="width"></label>
+        <div class="step" data-key="width" data-step="40" data-min="360" data-max="1600"></div></div>
+      <div class="row"><label data-i18n="flow"></label>
+        <div class="seg" data-key="flow">
+          <button data-v="paginated" data-i18n="paginated"></button>
+          <button data-v="scrolled" data-i18n="scrolled"></button>
+        </div></div>
+      <div class="row"><label data-i18n="columns"></label>
+        <div class="seg" data-key="columns">
+          <button data-v="1" data-i18n="col1"></button>
+          <button data-v="2" data-i18n="col2"></button>
+        </div></div>
+      <div class="row plain-only"><label data-i18n="textMode"></label>
+        <div class="seg" data-key="textMode">
+          <button data-v="auto" data-i18n="auto"></button>
+          <button data-v="prose" data-i18n="prose"></button>
+          <button data-v="code" data-i18n="codeMode"></button>
+        </div></div>
+      <div class="row text-only"><label data-i18n="textVertical"></label>
+        <div class="seg" data-key="textVertical">
+          <button data-v="auto" data-i18n="auto"></button>
+          <button data-v="on" data-i18n="vert"></button>
+          <button data-v="off" data-i18n="horiz"></button>
+        </div></div>
+      <div class="row"><label data-i18n="justify"></label>
+        <div class="seg" data-key="justify">
+          <button data-v="true" data-i18n="on"></button>
+          <button data-v="false" data-i18n="off"></button>
+        </div></div>
+    </div>
+    <div class="fixed-only">
+      <div class="row"><label data-i18n="zoom"></label>
+        <div class="seg" data-key="zoom">
+          <button data-v="fit-page" data-i18n="fitPage"></button>
+          <button data-v="fit-width" data-i18n="fitWidth"></button>
+        </div></div>
+      <div class="row"><label data-i18n="spread"></label>
+        <div class="seg" data-key="spread">
+          <button data-v="single" data-i18n="single"></button>
+          <button data-v="auto" data-i18n="spreadAuto"></button>
+        </div></div>
+    </div>
+    <div class="row"><label data-i18n="animated"></label>
+      <div class="seg" data-key="animated">
+        <button data-v="true" data-i18n="on"></button>
+        <button data-v="false" data-i18n="off"></button>
+      </div></div>
+    <div class="row"><label data-i18n="language"></label>
+      <div class="seg" data-key="lang">
+        <button data-v="ja">日本語</button>
+        <button data-v="en">English</button>
+      </div></div>
+  </aside>
+
+  <!-- selection toolbar -->
+  <div id="sel-bar" hidden>
+    <button class="dot" data-color="yellow"></button>
+    <button class="dot" data-color="green"></button>
+    <button class="dot" data-color="blue"></button>
+    <button class="dot" data-color="pink"></button>
+    <span class="sep"></span>
+    <button id="sel-dict" data-i18n="dict"></button>
+    <button id="sel-note" data-i18n="note"></button>
+    <button id="sel-copy" data-i18n="copy"></button>
+    <div id="sel-def" hidden></div>
+  </div>
+
+  <!-- note editor -->
+  <div id="editor" class="panel">
+    <blockquote id="ed-quote"></blockquote>
+    <div class="ed-colors">
+      <button class="dot" data-color="yellow"></button>
+      <button class="dot" data-color="green"></button>
+      <button class="dot" data-color="blue"></button>
+      <button class="dot" data-color="pink"></button>
+    </div>
+    <textarea id="ed-text" rows="4" data-i18n-ph="notePlaceholder"></textarea>
+    <div class="ed-actions">
+      <button id="ed-delete" class="danger" data-i18n="delete"></button>
+      <span style="flex:1"></span>
+      <button id="ed-cancel" data-i18n="cancel"></button>
+      <button id="ed-save" class="primary" data-i18n="save"></button>
+    </div>
+  </div>
+
+  <div id="scrim"></div>
+</div>
+
+<!-- lookup / word editor -->
+<div id="modal-scrim"></div>
+<div id="lookup" class="modal">
+  <div class="lk-head">
+    <input id="lk-word" spellcheck="false" autocomplete="off">
+    <button id="lk-lemma" class="chip" hidden></button>
+    <span style="flex:1"></span>
+    <button class="ext" data-site="wiktionary">Wiktionary ↗</button>
+    <button class="ext" data-site="eijiro">英辞郎 ↗</button>
+    <button class="ext" data-site="google">Google ↗</button>
+  </div>
+  <textarea id="lk-meaning" rows="3" data-i18n-ph="meaningPlaceholder"></textarea>
+  <label id="lk-ex-row" class="lk-ex"><input type="checkbox" id="lk-ex-on" checked>
+    <span><span id="lk-ex-text"></span> <span id="lk-ex-book" class="muted"></span></span></label>
+  <div id="lk-examples"></div>
+  <details id="lk-ref" open>
+    <summary><span data-i18n="reference"></span> <span id="lk-ref-status" class="muted"></span></summary>
+    <div id="lk-senses"></div>
+  </details>
+  <div class="ed-actions">
+    <button id="lk-delete" class="danger" data-i18n="delete"></button>
+    <span style="flex:1"></span>
+    <button id="lk-cancel" data-i18n="cancel"></button>
+    <button id="lk-save" class="primary" data-i18n="saveWord"></button>
+  </div>
+</div>
+
+<!-- wordbook manager -->
+<div id="wordbook" class="modal">
+  <div class="wb-head">
+    <h2 data-i18n="wordbook"></h2>
+    <span id="wb-count" class="muted"></span>
+    <span style="flex:1"></span>
+    <button id="wb-import" class="outline" data-i18n="importTsv"></button>
+    <button id="wb-export" class="outline" data-i18n="exportTsv"></button>
+    <button id="wb-close" title="Esc">✕</button>
+  </div>
+  <input id="wb-search" type="search" data-i18n-ph="searchWords" spellcheck="false">
+  <div id="wb-list"></div>
+  <div id="wb-empty" class="muted" data-i18n="wordbookEmpty"></div>
+  <div id="wb-path" class="muted"></div>
+</div>
+
+<div id="loading" hidden><div class="spinner"></div></div>
+<div id="toast" hidden></div>
+</body>
+</html>

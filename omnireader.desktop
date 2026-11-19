@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=OmniReader
+GenericName=E-book Reader
+Comment=Lightweight reader for EPUB, PDF, text, Markdown and source code
+Comment[ja]=EPUB・PDF・テキスト・Markdown・ソースコード対応の軽量リーダー
+Exec=omnireader %f
+Icon=omnireader
+Terminal=false
+Categories=Office;Viewer;
+Keywords=ebook;epub;pdf;reader;mobi;azw3;
+MimeType=application/epub+zip;application/pdf;application/x-mobipocket-ebook;application/x-fictionbook+xml;application/vnd.comicbook+zip;
