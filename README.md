@@ -4,7 +4,6 @@ A lightweight, fast reader for Linux that opens almost anything you read: e-book
 
 Built with [Tauri](https://tauri.app) (Rust) and [foliate-js](https://github.com/johnfactotum/foliate-js), the rendering engine behind [Foliate](https://johnfactotum.github.io/foliate/). The binary is about 7 MB and uses your system's WebKitGTK.
 
-[日本語の README はこちら](README.ja.md)
 
 ![Reading an English book with highlights and word-book words](docs/reading.png)
 
@@ -36,7 +35,6 @@ Built with [Tauri](https://tauri.app) (Rust) and [foliate-js](https://github.com
 
 **Personal word book**
 
-Made for readers who already know most words and only want to keep track of the rare ones.
 - Select a word and choose **Dictionary** to save your own definition. The sentence it appeared in and the book title are stored as an example.
 - Saved words get a dotted underline in every book. Click one to see your definition. Inflected forms are matched too: `obfuscate` also marks *obfuscating* and *obfuscated*.
 - Wiktionary definitions are shown as a reference (internet connection required). Click one to copy it into your definition. There are also buttons to look the word up on Wiktionary, Eijiro or Google in your browser.
@@ -70,7 +68,7 @@ cd omnireader
 ./install.sh
 ```
 
-This installs `~/.local/bin/omnireader` and adds OmniReader to your application menu. No `sudo` is needed.
+This installs `~/.local/bin/omnireader` and adds OmniReader to your application menu. 
 
 ### 2b. Build from source
 
@@ -86,10 +84,9 @@ sudo pacman -S webkit2gtk-4.1 base-devel librsvg
 
 git clone https://github.com/<you>/omnireader.git
 cd omnireader
-./install.sh            # builds with cargo if no prebuilt binary is present
+./install.sh            
 ```
 
-To build `.deb` and AppImage packages, run `cargo install tauri-cli` and then `cd src-tauri && cargo tauri build`.
 
 ### Updating and uninstalling
 
@@ -103,7 +100,7 @@ There are three ways to open a file:
 - Drag a file onto the window
 - Press `Ctrl+O`
 
-Files with e-book or PDF extensions are associated with OmniReader. Text, Markdown, HTML and code files are not, so OmniReader doesn't replace your editor or browser as the default app for them.
+
 
 ### Keyboard shortcuts
 
@@ -130,13 +127,6 @@ The word book is a single JSON file at `~/.local/share/omnireader/wordbook.json`
 word	meaning	example	book
 ```
 
-## Troubleshooting
-
-- **`error while loading shared libraries: libwebkit2gtk-4.1.so.0`**: install WebKitGTK (see step 1 above).
-- **Blank window or slow rendering, especially on NVIDIA:** start the app with `WEBKIT_DISABLE_DMABUF_RENDERER=1 omnireader`, or try `WEBKIT_DISABLE_COMPOSITING_MODE=1`. To make the setting permanent, put it in the `Exec=` line of `~/.local/share/applications/omnireader.desktop`, for example `Exec=env WEBKIT_DISABLE_DMABUF_RENDERER=1 omnireader %f`.
-- **Large gaps between words in English books:** install hyphenation dictionaries: `sudo apt install hyphen-en-us` (Fedora: `hyphen-en`).
-- **Performance logging:** start the app with `OMNIREADER_DEBUG=1 omnireader file.pdf` to print load and page-render times to the terminal.
-
 ## Data locations
 
 | What | Where |
@@ -144,7 +134,6 @@ word	meaning	example	book
 | Library, reading positions, highlights, notes, settings | `~/.local/share/io.github.omnireader/` (WebView storage) |
 | Word book | `~/.local/share/omnireader/wordbook.json` |
 
-If you used the app under its earlier name (Shiori), your data is migrated automatically on first launch.
 
 ## Project structure
 
@@ -160,5 +149,4 @@ ui/vendor/              marked, highlight.js
 ```
 
 ## License
-
-OmniReader is released under the [MIT License](LICENSE). Bundled third-party components keep their own licenses; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+MIT
