@@ -60,7 +60,7 @@ Most GNOME-based desktops already have it.
 
 ### 2a. Install a release build
 
-Download the archive from [Releases](../../releases), then:
+Download the archive file, then:
 
 ```sh
 tar xzf omnireader-linux.tar.gz
