@@ -5,7 +5,8 @@ A lightweight, fast reader for Linux that opens almost anything you read: e-book
 Built with [Tauri](https://tauri.app) (Rust) and [foliate-js](https://github.com/johnfactotum/foliate-js), the rendering engine behind [Foliate](https://johnfactotum.github.io/foliate/). The binary is about 7 MB and uses your system's WebKitGTK.
 
 
-![Reading an English book with highlights and word-book words](docs/reading.png)
+![outline](docs/reading.png)
+![dictionary](docs/dictionary.png)
 
 | Source code view | Vertical Japanese text |
 |---|---|
