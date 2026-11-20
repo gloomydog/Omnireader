@@ -49,14 +49,9 @@ Built with [Tauri](https://tauri.app) (Rust) and [foliate-js](https://github.com
 
 ### 1. Install WebKitGTK 4.1
 
-Most GNOME-based desktops already have it.
-
-| Distribution | Command |
-|---|---|
-| Ubuntu 22.04+ / Debian 12+ / Mint | `sudo apt install libwebkit2gtk-4.1-0` |
-| Fedora | `sudo dnf install webkit2gtk4.1` |
-| Arch / Manjaro | `sudo pacman -S webkit2gtk-4.1` |
-| openSUSE | `sudo zypper install libwebkit2gtk-4_1-0` |
+```sh
+sudo pacman -S webkit2gtk-4.1`
+```
 
 ### 2a. Install a release build
 
