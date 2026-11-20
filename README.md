@@ -87,12 +87,6 @@ cd omnireader
 ./install.sh            
 ```
 
-
-### Updating and uninstalling
-
-- **Update:** download or pull the new version and run `./install.sh` again. Your library, notes and word book are kept.
-- **Uninstall:** `./install.sh --uninstall`. Your data is kept.
-
 ## Usage
 
 There are three ways to open a file:
