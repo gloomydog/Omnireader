@@ -50,7 +50,7 @@ Built with [Tauri](https://tauri.app) (Rust) and [foliate-js](https://github.com
 ### 1. Install WebKitGTK 4.1
 
 ```sh
-sudo pacman -S webkit2gtk-4.1`
+sudo pacman -S webkit2gtk-4.1
 ```
 
 ### 2a. Install a release build
