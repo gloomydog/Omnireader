@@ -10,12 +10,13 @@ const IDENTIFIER: &str = "io.github.omnireader";
 const BOOK_EXTS: &[&str] = &[
     "epub", "pdf", "mobi", "azw3", "azw", "fb2", "fbz", "cbz",
     "txt", "text", "md", "markdown", "html", "htm", "xhtml",
+    "docx", "csv", "tsv", "xlsx", "xlsm", "ods",
 ];
 const CODE_EXTS: &[&str] = &[
     "py", "js", "mjs", "ts", "tsx", "jsx", "rs", "go", "c", "h", "cc", "cpp", "hpp", "java", "kt", "scala",
     "swift", "rb", "php", "pl", "lua", "r", "jl", "sh", "bash", "zsh", "sql", "css", "scss", "json", "yaml",
     "yml", "toml", "ini", "cfg", "conf", "xml", "vue", "svelte", "dart", "cs", "hs", "ml", "ex", "exs", "erl",
-    "clj", "el", "vim", "nix", "tf", "diff", "patch", "log", "csv", "tsv", "cmake", "mk", "asm", "zig", "nim",
+    "clj", "el", "vim", "nix", "tf", "diff", "patch", "log", "cmake", "mk", "asm", "zig", "nim",
     "proto", "graphql", "tex", "bib",
 ];
 
@@ -132,7 +133,7 @@ async fn pick_file(app: tauri::AppHandle) -> Option<String> {
         .set_title("Open / 開く")
         .set_directory(home())
         .add_filter("All supported", &[BOOK_EXTS, CODE_EXTS].concat())
-        .add_filter("Books & text", BOOK_EXTS)
+        .add_filter("Books, documents & spreadsheets", BOOK_EXTS)
         .add_filter("Source code", CODE_EXTS)
         .blocking_pick_file()
         .and_then(|f| f.into_path().ok())
