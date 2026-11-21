@@ -85,7 +85,7 @@ sudo dnf install webkit2gtk4.1-devel openssl-devel librsvg2-devel
 # Arch
 sudo pacman -S webkit2gtk-4.1 base-devel librsvg
 
-git clone https://github.com/<you>/omnireader.git
+git clone https://github.com/gloomydog/Omnireader
 cd omnireader
 ./install.sh            
 ```
