@@ -1,6 +1,6 @@
 const STRINGS = {
   ja: {
-    open: '本を開く', dropHint: 'EPUB・PDF・MOBI・AZW3・FB2・CBZ・TXT・Markdown・HTML・ソースコード をここにドロップ', dropSub: 'または「本を開く」から選択',
+    open: '本を開く', dropHint: 'EPUB・PDF・MOBI・AZW3・FB2・CBZ・TXT・Markdown・HTML・Word・Excel/CSV・ソースコード をここにドロップ', dropSub: 'または「本を開く」から選択',
     library: 'ライブラリ (Esc)', tocBtn: '目次・メモ (T)', settingsBtn: '表示設定', fsBtn: '全画面 (F)',
     tabToc: '目次', tabNotes: 'メモ', noToc: '目次はありません',
     theme: 'テーマ', light: '白', sepia: 'セピア', dark: '黒',
@@ -27,7 +27,7 @@ const STRINGS = {
     undone: '取り消しました（やり直し: Ctrl+Shift+Z）', redone: 'やり直しました', nothingToUndo: '取り消す操作はありません', nothingToRedo: 'やり直す操作はありません', page: 'p.', highlightCount: n => `${n} 件`,
   },
   en: {
-    open: 'Open book', dropHint: 'Drop an EPUB, PDF, MOBI, AZW3, FB2, CBZ, TXT, Markdown, HTML or source code file here', dropSub: 'or click “Open book”',
+    open: 'Open book', dropHint: 'Drop an EPUB, PDF, MOBI, AZW3, FB2, CBZ, TXT, Markdown, HTML, Word, Excel/CSV or source code file here', dropSub: 'or click “Open book”',
     library: 'Library (Esc)', tocBtn: 'Contents & notes (T)', settingsBtn: 'Display settings', fsBtn: 'Fullscreen (F)',
     tabToc: 'Contents', tabNotes: 'Notes', noToc: 'No table of contents',
     theme: 'Theme', light: 'Light', sepia: 'Sepia', dark: 'Dark',

@@ -4,6 +4,7 @@ import { createTOCView } from './foliate-js/ui/tree.js'
 import { t, setLang, defaultLang } from './i18n.js'
 import * as WB from './wordbook.js'
 import { makeTextBook, kindOf, NO_SCRIPT_META } from './textbook.js'
+import { makeSheetBook } from './sheets.js'
 
 const T = window.__TAURI__
 const invoke = T.core.invoke
@@ -75,7 +76,7 @@ html {
   background: ${th.bg} !important;
 }
 body { background: none !important; ${forceColor ? 'color: inherit !important;' : ''} }
-${forceColor ? `:is(p, div, span, li, dd, dt, blockquote, td, th, h1, h2, h3, h4, h5, h6, ruby, rt, em, strong, i, b):not(.code *, pre *) { color: inherit !important; background-color: transparent !important; }` : ''}
+${forceColor ? `:is(p, div, span, li, dd, dt, blockquote, td, th, h1, h2, h3, h4, h5, h6, ruby, rt, em, strong, i, b):not(.code *, pre *, .sheet *) { color: inherit !important; background-color: transparent !important; }` : ''}
 ${font ? `html, body, p, div, span, li, h1, h2, h3, h4, h5, h6, blockquote { font-family: ${font} !important; }` : ''}
 .code, .code *, pre, pre *, code, kbd, samp { font-family: "JetBrains Mono","Source Code Pro","Noto Sans Mono","DejaVu Sans Mono","Noto Sans Mono CJK JP",monospace !important; }
 ${hljsCSS(s.theme)}
@@ -261,7 +262,8 @@ async function openFile(file, key) {
   bookKey = key
   currentFile = file
   const textKind = kindOf(file.name)
-  const b = textKind
+  const b = textKind === 'sheet' ? await makeSheetBook(file)
+    : textKind
     ? await makeTextBook(file, {
         dir: key.includes('/') ? key.slice(0, key.lastIndexOf('/')) : '',
         vertical: settings.textVertical,
@@ -269,7 +271,7 @@ async function openFile(file, key) {
         readFile: path => invoke('read_file', { path }),
       })
     : await makeBook(file)
-  body.classList.toggle('textbook', !!textKind)
+  body.classList.toggle('textbook', !!textKind && textKind !== 'sheet')
   body.classList.toggle('plaintext', textKind === 'txt' || textKind === 'code')
   isFixed = b.rendition?.layout === 'pre-paginated'
   isPDF = /\.pdf$/i.test(file.name)
@@ -395,6 +397,9 @@ function savePosition() {
   touchRecent({ fraction: last.fraction })
 }
 
+// tables read best scrolled; everything else follows the setting
+const flowOf = () => view?.book?.isSheet ? 'scrolled' : settings.flow
+
 // ---------- input inside book frames ----------
 let annotationClickAt = 0
 
@@ -470,7 +475,7 @@ function zoneClick(x) {
   if ($('#editor').classList.contains('show')) return
   if (!$('#sel-bar').hidden) return hideSelBar()
   const w = window.innerWidth
-  const paging = isFixed || settings.flow === 'paginated'
+  const paging = isFixed || flowOf() === 'paginated'
   if (paging && x < w * 0.28) (navT0 = performance.now(), view?.goLeft())
   else if (paging && x > w * 0.72) (navT0 = performance.now(), view?.goRight())
   else toggleImmersive()
@@ -487,7 +492,7 @@ function onWheel(e) {
     zoomWheelAt = now
     return zoom(e.deltaY < 0 ? 1 : -1)
   }
-  const hijack = isFixed ? settings.zoom === 'fit-page' : settings.flow === 'paginated'
+  const hijack = isFixed ? settings.zoom === 'fit-page' : flowOf() === 'paginated'
   if (!hijack) return
   e.preventDefault()
   const d = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY
@@ -854,7 +859,7 @@ function onKey(e) {
   if (ctrl && k.toLowerCase() === 'c' && pending && !$('#sel-bar').hidden) return  // native copy
   if (ctrl || e.altKey) return
 
-  const paged = isFixed || settings.flow === 'paginated'
+  const paged = isFixed || flowOf() === 'paginated'
   switch (k) {
     case 'ArrowLeft': case 'h': e.preventDefault(); (navT0 = performance.now(), view.goLeft()); break
     case 'ArrowRight': case 'l': e.preventDefault(); (navT0 = performance.now(), view.goRight()); break
@@ -925,10 +930,10 @@ function applySettings() {
   if (isFixed) {
     r.setAttribute('zoom', settings.zoom)
   } else {
-    r.setAttribute('flow', settings.flow)
+    r.setAttribute('flow', flowOf())
     r.setAttribute('gap', '7%')
     r.setAttribute('margin', '28px')
-    const code = view.book?.isCode
+    const code = view.book?.isCode || view.book?.isWide
     r.setAttribute('max-inline-size', `${code ? Math.max(settings.width, 1400) : settings.width}px`)
     r.setAttribute('max-column-count', code ? 1 : settings.columns)
     r.setStyles?.(bookCSS(settings))
@@ -1025,7 +1030,7 @@ function scheduleMark(index, delay = 300) {
 }
 const markGen = new Map()
 async function markWords(index) {
-  if (!view || isFixed || view.book?.isCode) return
+  if (!view || isFixed || view.book?.isCode || view.book?.isSheet) return
   const gen = (markGen.get(index) ?? 0) + 1
   markGen.set(index, gen)
   for (const [cfi, a] of wordAnns) if (a.index === index) { view.deleteAnnotation(a); wordAnns.delete(cfi) }

@@ -7,6 +7,7 @@ export const CODE_EXTS = ('py pyw pyi js mjs cjs jsx ts tsx mts rs go c h cc cpp
   'rb php pl pm lua r jl sh bash zsh fish ps1 bat cmd sql css scss sass less json jsonc json5 yaml yml toml ini cfg conf ' +
   'xml svg vue svelte dart cs fs fsx hs ml mli ex exs erl hrl clj cljs lisp el vim nix tf hcl diff patch log csv tsv ' +
   'gradle cmake mk asm s m mm zig v d nim proto graphql gql tex bib env properties gitignore dockerignore').split(' ')
+  .filter(x => !['csv', 'tsv'].includes(x))
 const CODE_NAMES = ['makefile', 'dockerfile', 'containerfile', 'cmakelists.txt', 'license', 'readme', 'gemfile', 'rakefile', 'vagrantfile', 'justfile']
 const LANG_ALIAS = { pyw: 'python', pyi: 'python', mjs: 'javascript', cjs: 'javascript', mts: 'typescript', jsonc: 'json', json5: 'json',
   h: 'c', hh: 'cpp', hxx: 'cpp', zsh: 'bash', fish: 'bash', env: 'bash', mk: 'makefile', gradle: 'kotlin', svg: 'xml',
@@ -16,6 +17,8 @@ const LANG_ALIAS = { pyw: 'python', pyi: 'python', mjs: 'javascript', cjs: 'java
 export const kindOf = name => {
   const base = name.toLowerCase().split('/').pop()
   const ext = base.includes('.') ? base.split('.').pop() : ''
+  if (['csv', 'tsv', 'tab', 'xlsx', 'xlsm', 'ods'].includes(ext)) return 'sheet'
+  if (ext === 'docx') return 'docx'
   if (CODE_NAMES.includes(base)) return base === 'readme' || base === 'license' ? 'txt' : 'code'
   if (['md', 'markdown', 'mdown', 'mkd'].includes(ext)) return 'md'
   if (['html', 'htm', 'xhtml'].includes(ext)) return 'html'
@@ -258,6 +261,8 @@ blockquote { margin: 1em 0; padding: 0 0 0 1em; border-left: 3px solid rgba(127,
 h1, h2, h3, h4 { line-height: 1.35; }
 hr { border: 0; border-top: 1px solid rgba(127,127,127,.4); margin: 2em 0; }
 li > p { margin: .2em 0; }
+td > p, th > p { margin: 0; }
+.subtitle { font-weight: 400; opacity: .75; }
 .txt p { margin: 0; white-space: pre-wrap; }
 .txt.latin p { margin: 0 0 .9em; text-indent: 0; }
 .txt .blank { line-height: 1; }
@@ -279,7 +284,8 @@ const VERTICAL_CSS = `html { writing-mode: vertical-rl; -webkit-writing-mode: ve
  */
 export async function makeTextBook(file, { dir, vertical = 'auto', textMode = 'auto', readFile } = {}) {
   const kind = kindOf(file.name)
-  const raw = decodeText(await file.arrayBuffer())
+  const buf = await file.arrayBuffer()
+  const raw = kind === 'docx' ? '' : decodeText(buf)
   if (kind === 'code' ? textMode !== 'prose' : kind === 'txt' && (textMode === 'code' || (textMode === 'auto' && looksLikeCode(raw))))
     return codeBook(raw, file.name, { title: file.name })
   const urls = []
@@ -291,6 +297,19 @@ export async function makeTextBook(file, { dir, vertical = 'auto', textMode = 'a
     doc.body.innerHTML = r.html
     title = r.title; author = r.author; ja = r.ja
     bodyClass = 'txt' + (ja ? '' : ' latin')
+  } else if (kind === 'docx') {
+    const { default: mammoth } = await import('./vendor/mammoth.esm.js')
+    const { value } = await mammoth.convertToHtml({ arrayBuffer: buf }, {
+      styleMap: [
+        "p[style-name='Title'] => h1:fresh",
+        "p[style-name='Subtitle'] => h2.subtitle:fresh",
+        "p[style-name='Quote'] => blockquote:fresh",
+        "p[style-name='Intense Quote'] => blockquote:fresh",
+        "r[style-name='Strong'] => strong",
+      ],
+    })
+    doc.body.innerHTML = value
+    ja = isJapanese(doc.body.textContent)
   } else if (kind === 'md') {
     const src = raw.replace(/^---\n[\s\S]*?\n---\n/, '')   // drop YAML front matter
     doc.body.innerHTML = marked.parse(src, { gfm: true, async: false })
