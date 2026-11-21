@@ -1,7 +1,8 @@
 # OmniReader
 
-A lightweight, fast reader for Linux that opens almost anything you read: e-books, PDFs, plain text, Markdown, HTML and source code.
-Built with [Tauri](https://tauri.app) (Rust) and [foliate-js](https://github.com/johnfactotum/foliate-js), the rendering engine behind [Foliate](https://johnfactotum.github.io/foliate/). 
+A lightweight, fast reader for Linux that opens almost anything you read: e-books, PDFs, Word documents, spreadsheets, plain text, Markdown, HTML and source code.
+
+Built with [Tauri](https://tauri.app) (Rust) and [foliate-js](https://github.com/johnfactotum/foliate-js), the rendering engine behind [Foliate](https://johnfactotum.github.io/foliate/). The binary is about 7 MB and uses your system's WebKitGTK.
 
 
 ![outline](docs/reading.png)
@@ -19,6 +20,8 @@ Built with [Tauri](https://tauri.app) (Rust) and [foliate-js](https://github.com
 - Plain text: encoding is auto-detected (UTF-8, Shift_JIS, EUC-JP, UTF-16), Aozora Bunko ruby and heading markup are supported, and chapter headings become a table of contents
 - Markdown, with tables, code blocks and local images
 - HTML, with scripts removed
+- Word documents (DOCX), reflowed like a book. Headings become the table of contents, and tables, lists and images are kept. Highlights and the word book work in them.
+- Spreadsheets (XLSX, ODS, CSV, TSV) open in a built-in table viewer, with one table-of-contents entry per sheet, row numbers, and dates and numbers formatted. CSV encoding and delimiter are detected automatically.
 - Source code in about 80 languages, with line numbers and syntax highlighting. A `.txt` file that contains code is detected automatically.
 
 **Reading**
@@ -36,7 +39,7 @@ Built with [Tauri](https://tauri.app) (Rust) and [foliate-js](https://github.com
 **Personal word book**
 
 - Select a word and choose **Dictionary** to save your own definition. The sentence it appeared in and the book title are stored as an example.
-- Saved words get a dotted underline in every book. Click one to see your definition. Inflected forms are matched too: `obfuscate` also marks *obfuscating* and *obfuscated*.
+- Saved words get a dotted underline in every book. Click one to see your definition. 
 - Wiktionary definitions are shown as a reference (internet connection required). Click one to copy it into your definition. There are also buttons to look the word up on Wiktionary, Eijiro or Google in your browser.
 - Import and export as TSV/CSV, which works with Anki and spreadsheets.
 
@@ -49,9 +52,14 @@ Built with [Tauri](https://tauri.app) (Rust) and [foliate-js](https://github.com
 
 ### 1. Install WebKitGTK 4.1
 
-```sh
-sudo pacman -S webkit2gtk-4.1
-```
+Most GNOME-based desktops already have it.
+
+| Distribution | Command |
+|---|---|
+| Ubuntu 22.04+ / Debian 12+ / Mint | `sudo apt install libwebkit2gtk-4.1-0` |
+| Fedora | `sudo dnf install webkit2gtk4.1` |
+| Arch / Manjaro | `sudo pacman -S webkit2gtk-4.1` |
+| openSUSE | `sudo zypper install libwebkit2gtk-4_1-0` |
 
 ### 2a. Install a release build
 
@@ -77,10 +85,16 @@ sudo dnf install webkit2gtk4.1-devel openssl-devel librsvg2-devel
 # Arch
 sudo pacman -S webkit2gtk-4.1 base-devel librsvg
 
-git clone https://github.com/gloomydog/Omnireader
+git clone https://github.com/<you>/omnireader.git
 cd omnireader
 ./install.sh            
 ```
+
+
+### Updating and uninstalling
+
+- **Update:** download or pull the new version and run `./install.sh` again. Your library, notes and word book are kept.
+- **Uninstall:** `./install.sh --uninstall`. Your data is kept.
 
 ## Usage
 
@@ -139,3 +153,4 @@ ui/vendor/              marked, highlight.js
 
 ## License
 MIT
+
